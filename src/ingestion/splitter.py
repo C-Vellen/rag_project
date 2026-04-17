@@ -7,10 +7,8 @@ def split_documents(documents: list[Document]) -> list[Document]:
     Découpe les documents en chunks avec RecursiveCharacterTextSplitter.
     """
     splitter = RecursiveCharacterTextSplitter(
-        # chunk_size=settings.chunk_size,
-        # chunk_overlap=settings.chunk_overlap,
-        chunk_size=1000,
-        chunk_overlap=100,
+        chunk_size=settings.chunk_size,
+        chunk_overlap=settings.chunk_overlap,
         length_function=len,
         # Séparateurs par ordre de priorité
         separators=["\n\n", "\n", ". ", " ", ""],
@@ -18,6 +16,7 @@ def split_documents(documents: list[Document]) -> list[Document]:
     )
     chunks = splitter.split_documents(documents)
     print(f"  → {len(documents)} document(s) découpés en {len(chunks)} chunks")
-    for chunk in chunks:
+    print("> 5 premiers Chunks:--------------------------------------------------------- ")
+    for chunk in chunks[:5]:
         print(chunk)
     return chunks
