@@ -1,7 +1,9 @@
+import sys
 from pathlib import Path
 from .ingestion.loader import load_documents
 from .ingestion.splitter import split_documents
 from .ingestion.embedder import embed_and_store, embed_dryrun
+from .retrieval.qa_chain import get_qa_chain, display_full_prompt
 
 def ingest(source: str | Path) -> None:
     """Pipeline complète d'ingestion : load → split → embed → store."""
@@ -18,7 +20,42 @@ def ingest(source: str | Path) -> None:
 
     print("\n✅ Ingestion terminée !")
 
+def query(question: str) -> None:
+    """Pipeline de retrieval + génération."""
+
+
+    print(f"\n🔍 Question : {question}\n")
+    chain = get_qa_chain()
+
+    display_full_prompt(question)
+
+
+
+    # Streaming de la réponse
+    print("💬 Réponse :")
+    for chunk in chain.stream(question):
+        print(chunk, end="", flush=True)
+    print("\n")
+
+
 if __name__ == "__main__":
-    import sys
-    source = sys.argv[1] if len(sys.argv) > 1 else "documents/"
-    ingest(source)
+    command = sys.argv[1] if len(sys.argv) > 1 else "help"
+    
+    if command == "ingest":
+        source = sys.argv[2] if len(sys.argv) > 2 else "src/documents/"
+        ingest(source)
+
+    elif command == "query":
+        if len(sys.argv) < 3:
+            print("Usage : poetry run python -m rag_project.main query 'ta question'")
+            sys.exit(1)
+        query(sys.argv[2])
+
+    else:
+        print("Usage:")
+        print("  poetry run python -m rag_project.main ingest <dossier|fichier>")
+        print("  poetry run python -m rag_project.main query 'ta question'")
+        
+        
+    # source = sys.argv[1] if len(sys.argv) > 1 else "documents/"
+    # ingest(source)

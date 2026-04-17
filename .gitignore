@@ -1,5 +1,6 @@
 .venv
 **/__pycache__
 src/documents/*
+src/archives_documents/*
 .env
 notes
