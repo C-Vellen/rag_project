@@ -3,6 +3,7 @@
 
 1. ### Préparation des données:
 Déposer les fichiers (.pdf, .txt, .md) et les dossiers dans **rag_project/src/documents**
+Les fichiers déjà ingérés peuvent être déposés dans **rag_project/src/archives_documents** pour ne pas être ingérés 2 fois.
 
 Variables dans config.py:
 ```python
@@ -23,7 +24,10 @@ docker compose down -v
 docker compose up -d
 
 # lancer l'ingestion des données:
-poetry run python -m src.main src/documents
+poetry run python -m src.main ingest src/documents
+
+# poser une question (prompt)
+poetry run python -m src.main query "Bonjour, comment allez-vous ?"
 ```
 
 3. ### Voir la BD vectorielle :

@@ -13,12 +13,12 @@ class Settings(BaseSettings):
     debug: bool
        
     # Chunking
-    chunk_size: int = 100
-    chunk_overlap: int = 20
+    chunk_size: int = 1000
+    chunk_overlap: int = 200
 
     # Embedding 
     embedding_model: str = "text-embedding-3-small" 
-    model_dimensions: int = 512
+    model_dimensions: int = 1536
     # par défaut text-embedding-3-small: dimensions=1536
 
     # pgvector
