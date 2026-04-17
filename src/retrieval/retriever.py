@@ -1,11 +1,12 @@
 from langchain_postgres import PGVector
 from langchain_core.vectorstores import VectorStoreRetriever
 from ..ingestion.embedder import get_vectorstore
+from ..config import settings
 
 def get_retriever(
-    search_type: str = "similarity",
-    k: int = 4,
-    score_threshold: float | None = None,
+    search_type=settings.search_type,
+    k=settings.k,
+    score_threshold=settings.score_threshold,
 ) -> VectorStoreRetriever:
     """
     Retourne un retriever branché sur le vectorstore pgvector.

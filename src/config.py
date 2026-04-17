@@ -23,7 +23,23 @@ class Settings(BaseSettings):
 
     # pgvector
     collection_name: str = "documents"
-
+    
+    # retrieval
+    search_type: str = "similarity" 
+    """
+    search_type:
+        - "similarity"           : top-k par similarité cosinus (défaut)
+        - "mmr"                  : Maximum Marginal Relevance (diversité)
+        - "similarity_score_threshold" : filtre par score minimum
+    """
+    score_threshold: float | None = None
+    k: int = 4 # nombre de chunks sélectionnés
+    
+    #llm
+    llm_model: str = "gpt-4o-mini"
+    temperature: float = 0.2
+    
+    
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

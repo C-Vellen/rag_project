@@ -74,8 +74,8 @@ def get_qa_chain():
     # print("-----------------------------------------------------------------------")
 
     llm = ChatOpenAI(
-        model="gpt-4o-mini",
-        temperature=0,
+        model=settings.llm_model,
+        temperature=settings.temperature,
         api_key=settings.openai_api_key,
     )
 

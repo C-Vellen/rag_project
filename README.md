@@ -17,7 +17,6 @@ Variables dans config.py:
 
 
 2. ### Lancement:
-
 ```bash
 # réinitialiser / lancer la BD vectorielle:
 docker compose down -v
@@ -43,10 +42,10 @@ select * from langchain_pg_collection
 select 
     substring(id::text, 1, 5) || '...' as id,
     substring(collection_id::text, 1, 4) || '...' as col_id,
-    left(embedding::text, 40) || '...]' as "embedding dimension = 1536",
+    left(embedding::text, 40) || '...]' as "embedding",
     left(document::text, 80) || '...' || right(document::text, 20) as "document chunk ~ 1000 caractères / 180 mots",
     left(cmetadata::text, 1) || '...' || right(cmetadata::text, 6) as cmetadata
-    from langchain_pg_embedding;
+    from langchain_pg_embedding;q
 
 -- dimension des vecteurs :
 select 
@@ -67,8 +66,8 @@ select
 -- table des embeddings(tronqué pour la lisibilité):
 select 
     substring(id::text, 1, 5) || '...' as id,
-    left(embedding::text, 40) || '...]' as "embedding dimension = 512",
-    left(document::text, 120) as "document chunk ~ 100 caractères / 20 mots",
+    left(embedding::text, 40) || '...]' as "embeddings",
+    left(document::text, 90) || '...' || right(document::text, 20) as "document chunk",
     left(cmetadata::text, 1) || '...' || right(cmetadata::text, 6) as cmetadata
     from langchain_pg_embedding;
 
