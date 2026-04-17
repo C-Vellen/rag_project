@@ -1,7 +1,7 @@
 from pathlib import Path
 from .ingestion.loader import load_documents
 from .ingestion.splitter import split_documents
-from .ingestion.embedder import embed_and_store
+from .ingestion.embedder import embed_and_store, embed_dryrun
 
 def ingest(source: str | Path) -> None:
     """Pipeline complète d'ingestion : load → split → embed → store."""
@@ -14,6 +14,7 @@ def ingest(source: str | Path) -> None:
 
     print("\n🔢 Embedding et stockage dans pgvector...")
     embed_and_store(chunks)
+    # embed_dryrun(chunks)
 
     print("\n✅ Ingestion terminée !")
 
