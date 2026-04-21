@@ -16,10 +16,10 @@ def get_vectorstore_explicit(chunks):
     
     # Créer les vecteurs explicitement
     vectors = embeddings.embed_documents(texts)
-    print("> 5 premiers Embeddings:---------------------------------")
-    print("Vecteur | Dimension |      Norme | 5 premières coordonnées")
+    print("\t > 5 premiers Embeddings:---------------------------------")
+    print("\tVecteur | Dimension |      Norme |  vecteur")
     for i, vec in enumerate(vectors[:5]):
-        print(f"    {i:03d} | {len(vec):>9} | {np.linalg.norm(vec):>10.7f} | {vec[:5]}")
+        print(f"\t    {i:03d} | {len(vec):>9} | {np.linalg.norm(vec):>10.7f} | [{','.join(f'{v:4f}' for v in vec[:5])}, ...]")
     
     vectorstore = PGVector(
         embeddings=embeddings,
@@ -57,8 +57,6 @@ def get_vectorstore() -> PGVector:
 def embed_and_store(chunks: list[Document]) -> PGVector:
     """Calcule les embeddings et stocke les chunks dans pgvector."""
     print(f"  → Calcul des embeddings pour {len(chunks)} chunks...")
-    print(f" Préparation du chargement dans la BD: {repr(settings.database_url)}")
-    print(f"Debug: {settings.debug}")
     if settings.debug:    
         # Option debuggage: capture des embeddings avant chargement dans la BD
         vectorstore = get_vectorstore_explicit(chunks)
@@ -67,7 +65,7 @@ def embed_and_store(chunks: list[Document]) -> PGVector:
         vectorstore = get_vectorstore()
         vectorstore.add_documents(chunks)
     
-    print("  → Chunks stockés dans PostgreSQL ✓")
+    print(f"  → {len(chunks)} chunks et vecteurs stockés dans PostgreSQL {settings.db_name}/{settings.db_user}@localhost:{settings.db_port} ✓")
     return vectorstore
 
 def embed_dryrun(chunks: list[Document]):

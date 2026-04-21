@@ -2,5 +2,6 @@
 **/__pycache__
 src/documents/*
 src/archives_documents/*
+src/documents_en_attente
 .env
 notes

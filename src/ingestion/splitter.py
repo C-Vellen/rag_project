@@ -1,3 +1,5 @@
+import os
+import textwrap
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from ..config import settings
@@ -15,8 +17,17 @@ def split_documents(documents: list[Document]) -> list[Document]:
         add_start_index=True,   # Ajoute la position d'origine dans les métadonnées
     )
     chunks = splitter.split_documents(documents)
-    print(f"  → {len(documents)} document(s) découpés en {len(chunks)} chunks")
-    print("> 5 premiers Chunks:--------------------------------------------------------- ")
-    for chunk in chunks[:5]:
-        print(chunk)
+    
+    # affichage chunk en conosle:
+    if settings.debug:
+        console_width = os.get_terminal_size().columns - 10
+        print("\tPremiers chunks:")
+        for i, chunk in enumerate(chunks[:3]):
+            doc_source = chunk.metadata.get("source", "incnnue").split('/')[-1]
+            text = chunks[i].page_content
+            formatted_text = textwrap.fill(text, width=console_width, initial_indent="\t", subsequent_indent="\t")
+            print(f"\n\t> Document: {doc_source} / chunk: {i+1} ({len(text)} caractères)\n{formatted_text}")
+        print(f"\n\t> Document: {doc_source} / chunk: {i+2} ({len(text)} caractères)\n{formatted_text[100]} ...")
+    print(f"\n  → {len(documents)} document(s) découpés en {len(chunks)} chunks")
+    
     return chunks

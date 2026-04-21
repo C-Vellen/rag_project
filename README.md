@@ -67,8 +67,8 @@ select
 select 
     substring(id::text, 1, 5) || '...' as id,
     left(embedding::text, 40) || '...]' as "embeddings",
-    left(document::text, 90) || '...' || right(document::text, 20) as "document chunk",
-    left(cmetadata::text, 1) || '...' || right(cmetadata::text, 6) as cmetadata
+    left(document::text, 75) || '...' || right(document::text, 15) as "document chunk",
+    right(left(cmetadata::text, 42)::text,16) || '...' || right(cmetadata::text, 6) as cmetadata
     from langchain_pg_embedding;
 
 
