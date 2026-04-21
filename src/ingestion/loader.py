@@ -13,8 +13,6 @@ def load_documents(source: str | Path) -> list[Document]:
     """
     source = Path(source)
     # si source = dossier unique
-    print(">>>> source: ", source)
-    print(">>>> is_dir:: ", source.is_dir())
     if source.is_dir():
         loaders = [
             DirectoryLoader(str(source), glob="**/*.pdf", loader_cls=PyPDFLoader),
@@ -23,6 +21,8 @@ def load_documents(source: str | Path) -> list[Document]:
         ]
         docs = []
         for loader in loaders:
+            for docu in loader.load():
+                print("\t> Fichier: ", docu.metadata["source"].split('/')[-1])
             docs.extend(loader.load())
         return docs
 
