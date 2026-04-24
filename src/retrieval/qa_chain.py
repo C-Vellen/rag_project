@@ -4,7 +4,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableParallel
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from ..retrieval.retriever import get_retriever
-from ..ingestion.embedder import get_vectorstore
+from ..ingestion.embedder import get_openAI_embeddings, get_hf_embeddings, get_vectorstore
 from ..config import settings
 
 
@@ -31,11 +31,8 @@ def display_full_prompt(question: str, k: int = settings.k) -> str:
     chunks_with_scores = vectorstore.similarity_search_with_score(question, k=k)
 
     # 1. Vectorisation de la question
-    embeddings = OpenAIEmbeddings(
-        model=settings.embedding_model,
-        dimensions=settings.model_dimensions,
-        api_key=settings.openai_api_key,
-    )
+    # embeddings = get_openAI_embeddings()
+    embeddings = get_hf_embeddings()
     q_vector = embeddings.embed_query(question)
     print("➡️ Vectorisation de la question :")
     print("\tVecteur | Dimension |      Norme | Vecteur")
@@ -43,11 +40,11 @@ def display_full_prompt(question: str, k: int = settings.k) -> str:
     
     # 2. Chunks séléctionnés
     print("\n📚 RETRIVAL chunks sélectionnés :")
-    print("\tChunk| Distance |    Vecteur                        | Document source                          | Text")
+    print("\tChunk| Distance |    Vecteur                      | Document source                          | Text")
     for i, (doc, score) in enumerate(chunks_with_scores):
         doc_source = doc.metadata.get("source", "inconnue").split('/')[-1]
         text = doc.page_content
-        print(f"\t {i+1:>3} | {score:>8.4f} | [{','.join(f'{v:4f}' for v in q_vector[:3])}, ...] | {doc_source[:40]} | {text[:60]}...")
+        print(f"\t {i+1:>3} | {score:>8.4f} | [{','.join(f'{v:.4f}' for v in q_vector[:3]):<24} ... ] | {doc_source[:40]} | {text[:60]}...")
               
     # 3. Prompt envoyé au LLM
     print("\n📋 PROMPT COMPLET ENVOYÉ AU LLM\n")

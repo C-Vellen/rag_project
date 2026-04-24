@@ -9,7 +9,7 @@ def split_documents(documents: list[Document]) -> list[Document]:
     Découpe les documents en chunks avec RecursiveCharacterTextSplitter.
     """
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=settings.chunk_size,
+        chunk_size=settings.chunk_length,
         chunk_overlap=settings.chunk_overlap,
         length_function=len,
         # Séparateurs par ordre de priorité
