@@ -1,16 +1,41 @@
 import numpy as np
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from langchain_postgres import PGVector
 from ..config import settings
 
-def get_vectorstore_explicit(chunks):
-    """Retourne les vecteurs en permettant leur capture pour debug"""
-    embeddings = OpenAIEmbeddings(
+
+def get_openAI_embeddings() -> OpenAIEmbeddings:
+    """
+    embeddings avec openAI 
+    """
+    return OpenAIEmbeddings(
         model=settings.embedding_model,
         dimensions=settings.model_dimensions,
-        api_key=settings.openai_api_key,
+        api_key=settings.openai_api_key
     )
+
+def get_hf_embeddings() -> OpenAIEmbeddings:
+    """
+    embeddings avec hugging-face 
+    """
+    return OpenAIEmbeddings(
+        openai_api_base=f"{settings.embedding_api_url}/v1",
+        openai_api_key="none", 
+        model=settings.embedding_model,
+        check_embedding_ctx_length=False,
+        chunk_size=settings.chunk_size
+    )
+
+def get_vectorstore_explicit(chunks):
+    """Retourne les vecteurs en permettant leur capture pour debug
+        Choisir entre : 
+        embeddings=get_openAI_embeddings()
+        ou
+        embeddings=get-hf-embeddings()
+    """
+    embeddings = get_hf_embeddings()
     texts = [doc.page_content for doc in chunks]
     metadatas=[d.metadata for d in chunks]
     
@@ -38,16 +63,11 @@ def get_vectorstore_explicit(chunks):
     return texts, vectors
 
 
-
 def get_vectorstore() -> PGVector:
     """Retourne le vectorstore connecté à PostgreSQL."""
-    embeddings = OpenAIEmbeddings(
-        model=settings.embedding_model,
-        dimensions=settings.model_dimensions,
-        api_key=settings.openai_api_key,
-    )
+  
     return PGVector(
-        embeddings=embeddings,
+        embeddings=get_hf_embeddings(),
         collection_name=settings.collection_name,
         connection=settings.database_url,
         # Crée la table + l'extension pgvector si elle n'existe pas

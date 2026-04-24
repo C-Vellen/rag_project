@@ -13,13 +13,19 @@ class Settings(BaseSettings):
     debug: bool
        
     # Chunking
-    chunk_size: int = 1000
-    chunk_overlap: int = 200
+    chunk_length: int = 1000 # max chunk length (characters)
+    chunk_overlap: int = 200 # max chunk overlap between 2 consecutive chunks (characters)
+    chunk_size: int = 32 # max chunk number per batch (must be <32 with BAAI/bge-m3 + only-cpu)
 
-    # Embedding 
-    embedding_model: str = "text-embedding-3-small" 
-    model_dimensions: int = 1536
+    # Embedding openAI
+    # embedding_model: str = "text-embedding-3-small" 
+    # model_dimensions: int = 1536
     # par défaut text-embedding-3-small: dimensions=1536
+    
+    # Embedding hugging-face
+    embedding_model: str = "BAAI/bge-m3"
+    embedding_api_url: str = "http://localhost:8080"
+   
 
     # pgvector
     collection_name: str = "documents"

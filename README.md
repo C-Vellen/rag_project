@@ -5,14 +5,17 @@
 Déposer les fichiers (.pdf, .txt, .md) et les dossiers dans **rag_project/src/documents**
 Les fichiers déjà ingérés peuvent être déposés dans **rag_project/src/archives_documents** pour ne pas être ingérés 2 fois.
 
+Embeddings model: 
+- option 1 : embedding sur serveur openAI (nécessite une clé API) avec text-embedding-3-small
+- option 2 : embedding local avec BAAI/bge-m3 (hugging face).
+Choix au niveau de config.py
+
 Variables dans config.py:
 ```python
     # Chunking
-    chunk_size: int = 1000
-    chunk_overlap: int = 200
-
-    # Embedding
-    embedding_model: str = "text-embedding-3-small"
+    chunk_length: int = 1000 # max 1000 caractères / chunk
+    chunk_overlap: int = 200 # recouvrement de 200 caractères entre 2 chunks
+    k: int = 4 # nombre de chunks sélectionnés pour générer la réponses
 ```
 
 
